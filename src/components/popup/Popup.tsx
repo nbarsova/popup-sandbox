@@ -29,15 +29,14 @@ const Popup: FC<PopupProps> = ({children, alignment, element, position}) => {
     useEffect(()=> {
         let alignmentPositionVertical = [PopupPosition.TOP, PopupPosition.BOTTOM].includes(position)
             &&[PopupAlignment.TOP, PopupAlignment.BOTTOM].includes(alignment);
-        let alignmentPositionHorizonztal = [PopupPosition.TOP, PopupPosition.BOTTOM].includes(position)
-            &&[PopupAlignment.TOP, PopupAlignment.BOTTOM].includes(alignment);
-        if () {
+        let alignmentPositionHorizonztal = [PopupPosition.LEFT, PopupPosition.RIGHT].includes(position)
+            &&[PopupAlignment.LEFT, PopupAlignment.RIGHT].includes(alignment);
+        if (alignmentPositionVertical || alignmentPositionHorizonztal) {
             console.error('Impossible combination of popup position and alignment settings,' +
                 'changing alignment to center');
             setCorrectedAlignment(PopupAlignment.CENTER);
         }
-    }, []);
-
+    }, [alignment, position]);
 
     // @ts-ignore
     return <PopupWrapper ref={popupRef}
