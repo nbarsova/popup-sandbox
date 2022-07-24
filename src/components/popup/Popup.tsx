@@ -1,4 +1,4 @@
-import React, {FC, useLayoutEffect, useRef, useState} from 'react';
+import React, {FC, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {PopupWrapper} from "./ui";
 import {PopupAlignment, PopupPosition} from "./enums";
 
@@ -23,10 +23,25 @@ const Popup: FC<PopupProps> = ({children, alignment, element, position}) => {
         setPopupWidth(popupRef?.current?.getBoundingClientRect().width);
 
     },[popupRef]);
-    console.log()
+
+    const [correctedAlignment, setCorrectedAlignment] = useState(alignment);
+
+    useEffect(()=> {
+        let alignmentPositionVertical = [PopupPosition.TOP, PopupPosition.BOTTOM].includes(position)
+            &&[PopupAlignment.TOP, PopupAlignment.BOTTOM].includes(alignment);
+        let alignmentPositionHorizonztal = [PopupPosition.TOP, PopupPosition.BOTTOM].includes(position)
+            &&[PopupAlignment.TOP, PopupAlignment.BOTTOM].includes(alignment);
+        if () {
+            console.error('Impossible combination of popup position and alignment settings,' +
+                'changing alignment to center');
+            setCorrectedAlignment(PopupAlignment.CENTER);
+        }
+    }, []);
+
+
     // @ts-ignore
     return <PopupWrapper ref={popupRef}
-                         alignment={alignment}
+                         alignment={correctedAlignment}
                          position={position}
                          popupHeight={popupHeight}
                          popupWidth={popupWidth}>

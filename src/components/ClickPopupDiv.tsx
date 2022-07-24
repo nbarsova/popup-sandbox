@@ -11,6 +11,7 @@ const ClickPopupDiv:FC = () => {
     }
 
    return (<div style={{position: 'relative'}}>
+
         <ColoredDivPadding bgColor='crimson'
             onClick={togglePopupVisibility} ref={divRef} />
            {popupVisible && <Popup
