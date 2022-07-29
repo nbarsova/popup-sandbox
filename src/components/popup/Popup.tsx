@@ -1,49 +1,59 @@
-import React, {FC, useEffect, useLayoutEffect, useRef, useState} from 'react';
+import React, {FC, useEffect, useRef, useState} from 'react';
 import {PopupWrapper} from "./ui";
-import {PopupAlignment, PopupPosition} from "./enums";
+import {Alignments, PopupAlignment, PopupPosition, Positions} from "./enums";
+import {adjustPopupPositionAndAlignment} from "./helpers";
 
 interface PopupProps {
     children?: React.ReactNode,
-    alignment: PopupAlignment,
-    position: PopupPosition,
+    alignment?: PopupAlignment,
+    possiblePositions?: Array <PopupPosition>,
     element: HTMLElement|null
 }
 
-const Popup: FC<PopupProps> = ({children, alignment, element, position}) => {
+const Popup: FC<PopupProps> = ({children,
+                                   alignment,
+                                   element,
+                                   possiblePositions= [PopupPosition.LEFT,
+                                       PopupPosition.RIGHT,
+                                       PopupPosition.TOP,
+                                       PopupPosition.BOTTOM]}) => {
 
     const popupRef = useRef();
 
     const [popupHeight, setPopupHeight] = useState(0);
     const [popupWidth, setPopupWidth] = useState(0);
 
-    useLayoutEffect(() => {
-         // @ts-ignore
-        setPopupHeight(popupRef?.current?.getBoundingClientRect().height);
-        // @ts-ignore
-        setPopupWidth(popupRef?.current?.getBoundingClientRect().width);
+    // @ts-ignore
+    const popupBoundingRectHeight = popupRef?.current?.getBoundingClientRect().height;
+    // @ts-ignore
+    const popupBoundingRectWidth = popupRef?.current?.getBoundingClientRect().width;
 
-    },[popupRef]);
+    useEffect(() => {
+        setPopupHeight(popupBoundingRectHeight);
+        setPopupWidth(popupBoundingRectWidth);
+    },[popupBoundingRectHeight, popupBoundingRectWidth]);
 
-    const [correctedAlignment, setCorrectedAlignment] = useState(alignment);
+    const [correctedPosition, setCorrectedPosition] = useState<PopupPosition | undefined>(undefined)
+    const [correctedAlignment, setCorrectedAlignment] = useState<PopupAlignment | undefined>(alignment);
 
     useEffect(()=> {
-        let alignmentPositionVertical = [PopupPosition.TOP, PopupPosition.BOTTOM].includes(position)
-            &&[PopupAlignment.TOP, PopupAlignment.BOTTOM].includes(alignment);
-        let alignmentPositionHorizonztal = [PopupPosition.LEFT, PopupPosition.RIGHT].includes(position)
-            &&[PopupAlignment.LEFT, PopupAlignment.RIGHT].includes(alignment);
-        if (alignmentPositionVertical || alignmentPositionHorizonztal) {
-            console.error('Impossible combination of popup position and alignment settings,' +
-                'changing alignment to center');
-            setCorrectedAlignment(PopupAlignment.CENTER);
-        }
-    }, [alignment, position]);
+        if (element && popupRef.current) {
+                const {newPosition, newAlignment} = adjustPopupPositionAndAlignment(possiblePositions,
+                    alignment,
+                    element,
+                    popupRef.current);
+                setCorrectedPosition(newPosition);
+                setCorrectedAlignment(newAlignment);
+            }
+    }, [alignment, possiblePositions, popupRef.current]);
 
     // @ts-ignore
     return <PopupWrapper ref={popupRef}
                          alignment={correctedAlignment}
-                         position={position}
+                         position={correctedPosition}
                          popupHeight={popupHeight}
-                         popupWidth={popupWidth}>
+                         popupWidth={popupWidth}
+                         elementHeight={element?.getBoundingClientRect().height}>
         {children}
     </PopupWrapper>;
 }

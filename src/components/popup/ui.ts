@@ -5,13 +5,14 @@ interface PopupWrapperProps {
     popupHeight: number;
     popupWidth: number;
     alignment: PopupAlignment,
-    position: PopupPosition
+    position: PopupPosition,
+    elementHeight: number
 };
 
 export const PopupWrapper = styled.div<PopupWrapperProps>`
     background-color: lightcyan;
     position: absolute;
-    
+    z-index: 10;
     left: calc(100% + 6px);
     top: 6px;
   
@@ -29,17 +30,10 @@ export const PopupWrapper = styled.div<PopupWrapperProps>`
          }
     }};
 
-    ${({ position, popupHeight }) => {
+    ${({ position, popupHeight, elementHeight }) => {
       if (position === PopupPosition.LEFT) return 'right: calc(100% + 6px);left:unset;';
       else if (position === PopupPosition.TOP) return 'top: '+(-popupHeight-6)+'px;'
-      else if (position === PopupPosition.BOTTOM) return 'bottom: '+(-popupHeight-6)+'px;top:unset;'
+      else if (position === PopupPosition.BOTTOM) return 'top:'+(elementHeight+6)+'px;'
     }
 }};
 `;
-/*
-${({ topPos }) => topPos && 'top: '+topPos+'px;'};
-  ${({ bottomPos }) => bottomPos && 'bottom: ' +bottomPos+'px;'};
-
-  ${({ leftPos }) => leftPos && 'left: '+leftPos+'px;'};
-  ${({ rightPos }) => rightPos && 'right: ' +rightPos+'px;'};
- */

@@ -1,13 +1,16 @@
 import React from 'react';
-import {Main} from './ui';
-import HoverPopupDiv from "./components/HoverPopupDiv";
-import ClickPopupDiv from "./components/ClickPopupDiv";
+import { Main} from './ui';
+import Header from "./components/header/Header";
+import ContentTable from "./components/content/ContentTable";
+import Footer from "./components/footer/Footer";
 
 function App() {
+
   return (
     <Main>
-      <h2>React popup sandbox</h2>
-        <ClickPopupDiv />
+        <Header/>
+        <ContentTable/>
+        <Footer />
     </Main>
   );
 }

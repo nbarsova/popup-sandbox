@@ -12,3 +12,16 @@ export enum PopupPosition {
     TOP='TOP',
     BOTTOM='BOTTOM'
 }
+
+export const Positions = {
+    HorizontalPositions: [PopupPosition.LEFT, PopupPosition.RIGHT],
+    VerticalPositions: [PopupPosition.TOP, PopupPosition.BOTTOM]
+}
+
+export const Alignments = {
+    HorizontalAlignments: [PopupAlignment.RIGHT, PopupAlignment.LEFT],
+    VerticalAlignments: [PopupAlignment.TOP, PopupAlignment.BOTTOM]
+}
+
+
+
