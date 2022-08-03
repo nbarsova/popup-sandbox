@@ -1,5 +1,5 @@
 import React, {FC, useState} from 'react';
-import {RelativeContainer} from "./ui";
+import {RelativeContainer, SelectablePopupContent} from "./ui";
 import Popup from "../popup/Popup";
 import {InteractiveElementProps} from "./InteractiveElementProps";
 
@@ -13,16 +13,18 @@ const InteractiveElementHover: FC<InteractiveElementProps> = ({children, popup})
         setPopupVisible(false)
     }
 
-    return (<RelativeContainer>
-        <div data-testid='hoverableInterativeElement' onMouseEnter={showPopup}
-             onMouseLeave={hidePopup}
+    return (<RelativeContainer onMouseEnter={showPopup}
+                               onMouseLeave={hidePopup}>
+        <div data-testid='hoverableInterativeElement'
              ref={divRef}>
             {children}
         </div>
-        {popupVisible && <Popup
-            element={divRef.current}>
-            {popup}
-        </Popup>}
+        {popupVisible &&
+            <SelectablePopupContent onMouseEnter={showPopup}>
+                <Popup element={divRef.current}>
+                    {popup}
+                </Popup>
+            </SelectablePopupContent>}
     </RelativeContainer>);
 
 };

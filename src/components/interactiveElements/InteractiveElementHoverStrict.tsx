@@ -1,5 +1,5 @@
 import React, {FC, useState} from 'react';
-import {RelativeContainer} from "./ui";
+import {RelativeContainer, SelectablePopupContent} from "./ui";
 import Popup from "../popup/Popup";
 import {InteractiveElementStrictProps} from "./InteractiveElementStrictProps";
 
@@ -20,12 +20,15 @@ const InteractiveElementHoverStrict: FC<InteractiveElementStrictProps> = ({child
              ref={divRef}>
             {children}
         </div>
-        {popupVisible && <Popup
-            element={divRef.current}
-            alignment={popupAligment}
-            possiblePositions={[popupPosition]}>
-            {popup}
-        </Popup>}
+        {/* eslint-disable-next-line react/jsx-no-undef */}
+        {popupVisible && <SelectablePopupContent onMouseEnter={showPopup}>
+                                <Popup
+                                element={divRef.current}
+                                alignment={popupAligment}
+                                possiblePositions={[popupPosition]}>
+                                {popup}
+                            </Popup>
+        </SelectablePopupContent>}
     </RelativeContainer>);
 };
 

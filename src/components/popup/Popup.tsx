@@ -49,7 +49,6 @@ const Popup: FC<PopupProps> = ({children,
             }
     }, [alignment, possiblePositions, element]);
 
-
     const displayPopup = !!(correctedPosition && correctedAlignment && popupHeight && popupWidth);
 
     return <PopupWrapper ref={popupRef}

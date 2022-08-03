@@ -2,6 +2,7 @@ import React, {FC, useState} from 'react';
 import Popup from "../popup/Popup";
 import {RelativeContainer} from "./ui";
 import {InteractiveElementStrictProps} from "./InteractiveElementStrictProps";
+import useOnClickOutside from "./hooks/useOnClickOutside";
 
 const InteractiveElementClickStrict: FC<InteractiveElementStrictProps> = ({children, popup, popupPosition, popupAligment}) => {
 
@@ -10,6 +11,8 @@ const InteractiveElementClickStrict: FC<InteractiveElementStrictProps> = ({child
     const togglePopupVisibility = () => {
         setPopupVisible(!popupVisible);
     }
+
+    useOnClickOutside(divRef, () => setPopupVisible(false));
 
     return (<RelativeContainer>
             <div onClick={togglePopupVisibility} ref={divRef}>
