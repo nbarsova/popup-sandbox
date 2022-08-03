@@ -14,7 +14,7 @@ const FailIconPopup = () => {
 
 const FailIcon = () => {
     return (
-        <InteractiveElementClickStrict popup={<FailIconPopup/>}  popupAligment={PopupAlignment.LEFT} popupPosition={PopupPosition.TOP}>
+        <InteractiveElementClickStrict popup={<FailIconPopup/>} popupAligment={PopupAlignment.LEFT} popupPosition={PopupPosition.TOP}>
             <FailSVG style={{height: '30px', width: '30px', color}}/>
         </InteractiveElementClickStrict>);
 };

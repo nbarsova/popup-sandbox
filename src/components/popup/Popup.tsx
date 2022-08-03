@@ -1,6 +1,6 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
 import {PopupWrapper} from "./ui";
-import {Alignments, PopupAlignment, PopupPosition, Positions} from "./enums";
+import {PopupAlignment, PopupPosition} from "./enums";
 import {adjustPopupPositionAndAlignment} from "./helpers";
 
 interface PopupProps {
@@ -18,15 +18,17 @@ const Popup: FC<PopupProps> = ({children,
                                        PopupPosition.TOP,
                                        PopupPosition.BOTTOM]}) => {
 
-    const popupRef = useRef();
+    const popupRef = useRef<HTMLDivElement>(null);
 
     const [popupHeight, setPopupHeight] = useState(0);
     const [popupWidth, setPopupWidth] = useState(0);
 
-    // @ts-ignore
-    const popupBoundingRectHeight = popupRef?.current?.getBoundingClientRect().height;
-    // @ts-ignore
-    const popupBoundingRectWidth = popupRef?.current?.getBoundingClientRect().width;
+    const popupBoundingRectHeight =
+        popupRef?.current?.getBoundingClientRect().height || 0;
+
+    const popupBoundingRectWidth = popupRef?.current?.getBoundingClientRect().width || 0;
+
+    const elementHeight = element?.getBoundingClientRect().height || 0;
 
     useEffect(() => {
         setPopupHeight(popupBoundingRectHeight);
@@ -45,15 +47,18 @@ const Popup: FC<PopupProps> = ({children,
                 setCorrectedPosition(newPosition);
                 setCorrectedAlignment(newAlignment);
             }
-    }, [alignment, possiblePositions, popupRef.current]);
+    }, [alignment, possiblePositions, element]);
 
-    // @ts-ignore
+
+    const displayPopup = !!(correctedPosition && correctedAlignment && popupHeight && popupWidth);
+
     return <PopupWrapper ref={popupRef}
                          alignment={correctedAlignment}
                          position={correctedPosition}
                          popupHeight={popupHeight}
                          popupWidth={popupWidth}
-                         elementHeight={element?.getBoundingClientRect().height}>
+                         visible={displayPopup}
+                         elementHeight={elementHeight}>
         {children}
     </PopupWrapper>;
 }

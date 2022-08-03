@@ -7,7 +7,7 @@ type AdjustedPopupPositionAndAlignment = {
 const adjustAlignment = (popupPosition: PopupPosition,
                          element: HTMLElement,
                          popupElement: HTMLElement) : PopupAlignment => {
-    let adjustedAlignment;
+    let adjustedAlignment = PopupAlignment.CENTER;
     if (Positions.HorizontalPositions.includes(popupPosition)) {
         let placeToTheTop =
             (element.getBoundingClientRect().top + element.getBoundingClientRect().height/2)
@@ -15,15 +15,13 @@ const adjustAlignment = (popupPosition: PopupPosition,
         let placeToTheBottom =
             (element.getBoundingClientRect().top + element.getBoundingClientRect().height/2)
                                                     + popupElement.getBoundingClientRect().height/2;
-
         if (placeToTheTop < 0 && placeToTheBottom > window.innerHeight) {
-            adjustedAlignment = PopupAlignment.CENTER;
+            console.error('There is no optimal alignment for popup, consider restyling it in order to fit in, aligning to the center');
         } else if (placeToTheTop < 0) {
             adjustedAlignment = PopupAlignment.TOP;
         } else if (placeToTheBottom > window.innerHeight) {
             adjustedAlignment = PopupAlignment.BOTTOM;
         }
-
     } else if (Positions.VerticalPositions.includes(popupPosition)) {
         let placeToTheRight = (element.getBoundingClientRect().left + element.getBoundingClientRect().width/2)
             + popupElement.getBoundingClientRect().width / 2;
@@ -31,17 +29,12 @@ const adjustAlignment = (popupPosition: PopupPosition,
             - popupElement.getBoundingClientRect().width / 2;
 
         if (placeToTheLeft < 0 && placeToTheRight > window.innerWidth) {
-            adjustedAlignment = PopupAlignment.CENTER;
+            console.error('There is no optimal alignment for popup, consider restyling it in order to fit in, aligning to the center');
         } else if (placeToTheLeft < 0) {
             adjustedAlignment = PopupAlignment.LEFT;
         } else if (placeToTheRight > window.innerWidth) {
             adjustedAlignment = PopupAlignment.RIGHT;
         }
-    }
-
-    if (!adjustedAlignment) {
-        console.error('There is no optimal alignment for popup, consider restyling it in order to fit in, aligning to the center');
-        adjustedAlignment = PopupAlignment.CENTER;
     }
     return adjustedAlignment;
 };
@@ -57,51 +50,55 @@ export const adjustPopupPositionAndAlignment = (possiblePositions: Array<PopupPo
     let popupWidth = popupElement.getBoundingClientRect().width;
     let currentIndex = 0;
 
-    while (currentIndex < possiblePositions.length) {
-        let preferredPosition = possiblePositions[currentIndex];
+    if (possiblePositions.length === 1) {
+        newPosition=possiblePositions[0];
+    } else {
+        while (currentIndex < possiblePositions.length) {
+            let preferredPosition = possiblePositions[currentIndex];
 
-        if (preferredPosition === PopupPosition.LEFT) {
-            let placeToTheLeft = element?.getBoundingClientRect().left;
+            if (preferredPosition === PopupPosition.LEFT) {
+                let placeToTheLeft = element?.getBoundingClientRect().left;
 
-            if (placeToTheLeft && placeToTheLeft > popupWidth) {
-                newPosition = preferredPosition;
-            } else {
-                currentIndex++;
+                if (placeToTheLeft && placeToTheLeft > popupWidth) {
+                    newPosition = preferredPosition;
+                } else {
+                    currentIndex++;
+                }
             }
-        }
 
-        if (preferredPosition === PopupPosition.RIGHT) {
-            let placeToTheRight = window.innerWidth - (element?.getBoundingClientRect().left + element?.getBoundingClientRect().width);
+            if (preferredPosition === PopupPosition.RIGHT) {
+                let placeToTheRight = window.innerWidth - (element?.getBoundingClientRect().left + element?.getBoundingClientRect().width);
 
-            if (placeToTheRight > popupWidth) {
-                newPosition = preferredPosition;
-            } else {
-                currentIndex++;
+                if (placeToTheRight > popupWidth) {
+                    newPosition = preferredPosition;
+                } else {
+                    currentIndex++;
+                }
             }
-        }
 
-        if (preferredPosition === PopupPosition.TOP) {
-            let placeToTheTop = element?.getBoundingClientRect().top;
+            if (preferredPosition === PopupPosition.TOP) {
+                let placeToTheTop = element?.getBoundingClientRect().top;
 
-            if (placeToTheTop > popupHeight) {
-                newPosition = preferredPosition;
-            } else {
-                currentIndex++;
+                if (placeToTheTop > popupHeight) {
+                    newPosition = preferredPosition;
+                } else {
+                    currentIndex++;
+                }
             }
-        }
 
-        if (preferredPosition === PopupPosition.BOTTOM) {
+            if (preferredPosition === PopupPosition.BOTTOM) {
 
-            let placeToTheBottom = window.innerHeight - (element?.getBoundingClientRect().top + element?.getBoundingClientRect().height);
+                let placeToTheBottom = window.innerHeight - (element?.getBoundingClientRect().top + element?.getBoundingClientRect().height);
 
-            if (placeToTheBottom > popupHeight) {
-                newPosition = preferredPosition;
-            } else {
-                currentIndex++;
+                if (placeToTheBottom > popupHeight) {
+                    newPosition = preferredPosition;
+                } else {
+                    currentIndex++;
+                }
             }
-        }
 
-        if (newPosition) break;
+            if (newPosition) break;
+        }
     }
 
     if (!newPosition) {
